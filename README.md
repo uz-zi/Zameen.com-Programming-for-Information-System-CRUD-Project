@@ -6,3 +6,7 @@ More than 200+ employees are currently working in this company, and it has becom
 # Problem
 Currently, the company is facing the issue of ghost postings. Some sellers create fake listings, and when buyers visit the listed property, they find that it does not exist. Instead, the real estate agents show them different properties. The company is now seeking a solution to this problem.
 
+### [Company Location](https://maps.app.goo.gl/rWNqMtQ9zYMZUuRK6)  
+### [Website Link](https://www.zameen.com/)
+
+
