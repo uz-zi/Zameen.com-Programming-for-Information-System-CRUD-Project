@@ -24,10 +24,8 @@ const AuthForm = () => {
     e.preventDefault();
     if (isLogin) {
       console.log('Logging in with:', formData);
-      // Call login API here
     } else {
       console.log('Signing up with:', formData);
-      // Call signup API here
     }
   };
 
@@ -61,11 +59,11 @@ const AuthForm = () => {
           onChange={handleChange}
           required
         />
-        <button type="submit">{isLogin ? 'Login' : 'Sign Up'}</button>
+        <button type="submit" className="btn btn-primary">{isLogin ? 'Login' : 'Sign Up'}</button>
       </form>
       <p>
         {isLogin ? "Don't have an account?" : 'Already have an account?'}{' '}
-        <button onClick={toggleForm} className="toggle-button">
+        <button onClick={toggleForm} className="btn btn-success">
           {isLogin ? 'Sign Up' : 'Login'}
         </button>
       </p>
