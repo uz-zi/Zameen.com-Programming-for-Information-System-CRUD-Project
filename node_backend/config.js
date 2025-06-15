@@ -1,9 +1,14 @@
 const { Sequelize, DataTypes } = require("sequelize");
 
-const sequelize = new Sequelize("prgraming_for_information_system", "postgres", "Admin", {
-  host: "localhost",
-  dialect: "postgres",
-});
+const sequelize = new Sequelize(
+  "prgraming_for_information_system", 
+  "postgres",
+  "Admin", 
+  {
+    host: "localhost",
+    dialect: "postgres",
+  }
+);
 
 sequelize
   .authenticate()
