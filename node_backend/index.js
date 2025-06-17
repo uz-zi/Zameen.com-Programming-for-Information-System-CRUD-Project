@@ -1,5 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const cors = require('cors');
+const path = require('path');
 const app = express();
 const hostname = '127.0.0.1';
 const port = 3000;
@@ -7,6 +9,11 @@ const db_connection = require('./config');
 const userRoute = require('./routes/signIn_signup.routes');
 
 app.use(bodyParser.json());
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true
+}));
 
 app.use('/user', userRoute);
 

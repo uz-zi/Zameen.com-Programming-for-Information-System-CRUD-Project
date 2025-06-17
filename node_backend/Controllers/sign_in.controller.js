@@ -4,13 +4,14 @@ const bcrypt = require("bcrypt");
 
 const signUpUser = async (req, res) => {
   try {
-    const hashedPassword = await bcrypt.hash(req.body.pass, 10);
+    const hashedPassword = await bcrypt.hash(req.body.Password, 10);
+    console.log("Hashed password:", hashedPassword);
     const newUser = await User.create({
-      FirstName: req.body.fname,
-      LastName: req.body.lname,
-      Email: req.body.email,
+      FirstName: req.body.FirstName,
+      LastName: req.body.LastName,
+      Email: req.body.Email,
       Password: hashedPassword,
-      PhoneNumber: req.body.pnum,
+      PhoneNumber: req.body.PhoneNumber,
     });
 
     res.status(201).json({ message: "User created successfully", userId: newUser.UserID });
@@ -22,30 +23,37 @@ const signUpUser = async (req, res) => {
 
 const signInUser = async (req, res) => {
   try {
-    await sequelize.sync();
+    const { Email, Password } = req.body;
+    console.log("===========", req.body);
 
-    const { email, pass } = req.body;
-    const user = await User.findOne({
-      where: { Email: email },
-    });
+    if (!Email || !Password) {
+      return res.status(400).json({ message: "Email and password are required" });
+    }
+
+    const user = await User.findOne({ where: { Email } });
+    console.log("================found email")
 
     if (!user) {
       return res.status(401).json({ message: "Invalid email or password" });
     }
 
-    const isPasswordValid = await bcrypt.compare(pass, user.Password);
+    const isPasswordValid = await bcrypt.compare(Password, user.Password);
+    console.log("Plain password:", Password);
+    console.log("Hashed password from DB:", user.Password);
     if (!isPasswordValid) {
       return res.status(401).json({ message: "Invalid email or password" });
     }
+    console.log("================found password")
 
-    res.status(200).json({
-      user_ID: user.UserID,
+    return res.status(200).json({
+      userId: user.UserID,
       role: user.role,
       message: "Login successful",
     });
+
   } catch (error) {
     console.error("Error in signInUser:", error);
-    res.status(500).send(error.message);
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
 
