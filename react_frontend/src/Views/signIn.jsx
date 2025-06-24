@@ -22,13 +22,13 @@ const SignInForm = () => {
         Password: formData.password,
       };
 
-     const response = await axios.post(
+      const response = await axios.post(
         'http://localhost:3000/user/signIn',
         payload,
       );
 
       if (response.status === 200 || response.status === 201) {
-        console.log('SignedIn successfully:', response.data);
+        console.log('Signed in successfully:', response.data);
       } else {
         console.error('Error:', response.statusText);
       }
@@ -38,28 +38,42 @@ const SignInForm = () => {
   };
 
   return (
-    <div className="auth-container">
+    //updated with bootstrap compoenet
+    <div className="container mt-5">
       <h2>Login</h2>
-      <form onSubmit={handleSubmit} className="auth-form">
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={formData.password}
-          onChange={handleChange}
-          required
-        />
-        <button type="submit" className="btn btn-primary">Login</button>
+      <form onSubmit={handleSubmit}>
+        <div className="mb-3">
+          <label htmlFor="exampleInputEmail1" className="form-label">Email address</label>
+          <input
+            type="email"
+            className="form-control"
+            id="exampleInputEmail1"
+            aria-describedby="emailHelp"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+          />
+          <div id="emailHelp" className="form-text">We'll never share your email with anyone else.</div>
+        </div>
+        <div className="mb-3">
+          <label htmlFor="exampleInputPassword1" className="form-label">Password</label>
+          <input
+            type="password"
+            className="form-control"
+            id="exampleInputPassword1"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className="mb-3 form-check">
+          <input type="checkbox" className="form-check-input" id="exampleCheck1" />
+          <label className="form-check-label" htmlFor="exampleCheck1">Check me out</label>
+        </div>
+        <button type="submit" className="btn btn-primary">Submit</button>
       </form>
-       
     </div>
   );
 };
