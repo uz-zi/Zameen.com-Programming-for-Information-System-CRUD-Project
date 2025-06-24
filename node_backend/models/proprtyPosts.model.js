@@ -21,7 +21,7 @@ const PropertyPost = sequelize.define("PropertyPost", {
     allowNull: false
   },
   PropertyType: {
-    type: DataTypes.ENUM("house", "plot", "apartment", "commercial"),
+    type: DataTypes.ENUM("house", "plot", "apartment"),
     allowNull: false
   },
   Address: {
