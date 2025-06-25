@@ -7,6 +7,8 @@ import UploadPosts from "./Views/allposts";
 import Profile from "./Views/profile"
 import ViewPost from "./Views/viewpost"
 import Footer from "./Views/footer"
+import AddPost from "./Views/addpost"
+
 function App() {
 
   return (
@@ -19,6 +21,7 @@ function App() {
           <Route path="/UploadPosts" element={<UploadPosts/>}></Route>
           <Route path="/Profile" element={<Profile/>}></Route>
           <Route path="/ViewPost" element={<ViewPost/>}></Route>
+          <Route path="/addPost" element={<AddPost/>}></Route>
         </Routes>
        </BrowserRouter>
     </>
