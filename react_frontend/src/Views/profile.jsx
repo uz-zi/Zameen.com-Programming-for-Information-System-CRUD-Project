@@ -6,8 +6,7 @@ const SetupABMId = () => {
       <div className="row justify-content-center">
         <div className="col-lg-8">
           <div className="mt-4 px-3">
-            <h1 className="display-5 fw-semibold py-3">addbyme</h1>
-            <h2 className="h2 fw-light pt-4">Setup Your ABM Id</h2>
+            <h1 className="display-5 fw-semibold py-3">Profile</h1>
 
             <form className="my-4">
               {/* Name */}
@@ -24,8 +23,6 @@ const SetupABMId = () => {
               {/* Username/Handle */}
               <div className="mb-3">
                 <label htmlFor="handle" className="form-label fw-semibold">Username</label>
-                <div className="input-group">
-                  <span className="input-group-text">addby.me/</span>
                   <input
                     type="text"
                     className="form-control"
@@ -33,7 +30,6 @@ const SetupABMId = () => {
                     name="handle"
                     placeholder="username"
                   />
-                </div>
               </div>
 
               {/* Profile Photo Preview */}
@@ -67,50 +63,15 @@ const SetupABMId = () => {
                 />
               </div>
 
-              {/* UPI ID */}
-              <div className="mb-3">
-                <label htmlFor="upiId" className="form-label fw-semibold">UPI Id</label>
-                <div className="input-group">
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="upiId"
-                    placeholder="ie : lisa859sh@okaxis"
-                  />
-                  <button type="button" className="btn btn-primary">Learn More</button>
-                </div>
-              </div>
-
-              {/* PayPal Me */}
-              <div className="mb-3">
-                <label htmlFor="paypalMe" className="form-label fw-semibold">Paypal Me</label>
-                <div className="input-group">
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="paypalMe"
-                    placeholder="ie : paypal.me/yubashika"
-                  />
-                  <button type="button" className="btn btn-primary">Learn More</button>
-                </div>
-              </div>
-
-              {/* Categories */}
-              <div className="mb-3">
-                <h3 className="h5 fw-semibold">Category :</h3>
-                <div className="d-flex flex-wrap gap-2 mt-2">
-                  {["Business", "Creative", "Education", "Tech", "Entertainment", "Other"].map(cat => (
-                    <button key={cat} type="button" className="btn btn-outline-dark fw-bold">
-                      {cat}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
               {/* Submit Button */}
               <div className="mt-4">
                 <button type="submit" className="btn btn-dark fw-bold px-4 py-2">
                   Submit
+                </button>
+              </div>
+              <div className="mt-4">
+                <button type="submit" className="btn btn-primary fw-bold px-4 py-2">
+                  Update
                 </button>
               </div>
 
