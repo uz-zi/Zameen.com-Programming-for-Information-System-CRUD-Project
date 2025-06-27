@@ -1,62 +1,232 @@
 import React, { useState } from 'react';
 
 const PostForm = () => {
-  const [postContent, setPostContent] = useState('');
-  const [file, setFile] = useState(null);
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [price, setPrice] = useState('');
+  const [propertyType, setPropertyType] = useState('');
+  const [address, setAddress] = useState('');
+  const [city, setCity] = useState('');
+  const [area, setArea] = useState('');
+  const [bedrooms, setBedrooms] = useState('');
+  const [bathrooms, setBathrooms] = useState('');
+  const [sizeInSqFt, setSizeInSqFt] = useState('');
+  const [images, setImages] = useState([]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log({ postContent, file });
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('description', description);
+    formData.append('price', price);
+    formData.append('propertyType', propertyType);
+    formData.append('address', address);
+    formData.append('city', city);
+    formData.append('area', area);
+    formData.append('bedrooms', bedrooms);
+    formData.append('bathrooms', bathrooms);
+    formData.append('sizeInSqFt', sizeInSqFt);
+    for (let i = 0; i < images.length; i++) {
+      formData.append('images', images[i]);
+    }
+    // Send the form data to the server
   };
 
   return (
-    <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
+   <div className="d-flex justify-content-center align-items-center bg-light my-5">
       <div className="card shadow p-4" style={{ maxWidth: '500px', width: '100%' }}>
         <form onSubmit={handleSubmit}>
-          {/* Post Content */}
+          {/* Title */}
           <div className="mb-4">
             <label className="form-label fw-bold text-muted">
-              Post Content:
+              Title:
             </label>
-            <textarea
-              id="postContent"
-              name="postContent"
-              rows="4"
+            <input
+              type="text"
+              id="title"
+              name="title"
               className="form-control"
-              placeholder="What's on your mind?"
-              maxLength={280}
-              value={postContent}
-              onChange={(e) => setPostContent(e.target.value)}
+              placeholder="Enter title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              required
             />
           </div>
 
-          {/* File Attachment */}
+          {/* Description */}
           <div className="mb-4">
-            <label htmlFor="fileAttachment" className="form-label fw-bold text-muted">
-              Attach File:
+            <label className="form-label fw-bold text-muted">
+              Description:
             </label>
-            <div className="border p-3 rounded d-flex justify-content-between align-items-center">
-              <div className="d-flex align-items-center">
-                <span className="text-secondary small">Choose a file</span>
-              </div>
-              <span className="text-muted small">Max file size: 5MB</span>
-              <input
-                type="file"
-                id="fileAttachment"
-                name="fileAttachment"
-                className="position-absolute w-100 h-100 opacity-0"
-                onChange={(e) => setFile(e.target.files[0])}
-                style={{ cursor: 'pointer' }}
-              />
-            </div>
+            <textarea
+              id="description"
+              name="description"
+              rows="4"
+              className="form-control"
+              placeholder="Enter description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              required
+            />
           </div>
 
-          {/* Submit Button and Character Limit */}
+          {/* Price */}
+          <div className="mb-4">
+            <label className="form-label fw-bold text-muted">
+              Price:
+            </label>
+            <input
+              type="number"
+              id="price"
+              name="price"
+              className="form-control"
+              placeholder="Enter price"
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
+              required
+            />
+          </div>
+
+          {/* Property Type */}
+          <div className="mb-4">
+            <label className="form-label fw-bold text-muted">
+              Property Type:
+            </label>
+            <select
+              id="propertyType"
+              name="propertyType"
+              className="form-control"
+              value={propertyType}
+              onChange={(e) => setPropertyType(e.target.value)}
+              required
+            >
+              <option value="">Select property type</option>
+              <option value="house">House</option>
+              <option value="plot">Plot</option>
+              <option value="apartment">Apartment</option>
+            </select>
+          </div>
+
+          {/* Address */}
+          <div className="mb-4">
+            <label className="form-label fw-bold text-muted">
+              Address:
+            </label>
+            <input
+              type="text"
+              id="address"
+              name="address"
+              className="form-control"
+              placeholder="Enter address"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              required
+            />
+          </div>
+
+          {/* City */}
+          <div className="mb-4">
+            <label className="form-label fw-bold text-muted">
+              City:
+            </label>
+            <input
+              type="text"
+              id="city"
+              name="city"
+              className="form-control"
+              placeholder="Enter city"
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              required
+            />
+          </div>
+
+          {/* Area */}
+          <div className="mb-4">
+            <label className="form-label fw-bold text-muted">
+              Area:
+            </label>
+            <input
+              type="text"
+              id="area"
+              name="area"
+              className="form-control"
+              placeholder="Enter area"
+              value={area}
+              onChange={(e) => setArea(e.target.value)}
+              required
+            />
+          </div>
+
+          {/* Bedrooms */}
+          <div className="mb-4">
+            <label className="form-label fw-bold text-muted">
+              Bedrooms:
+            </label>
+            <input
+              type="number"
+              id="bedrooms"
+              name="bedrooms"
+              className="form-control"
+              placeholder="Enter number of bedrooms"
+              value={bedrooms}
+              onChange={(e) => setBedrooms(e.target.value)}
+            />
+          </div>
+
+          {/* Bathrooms */}
+          <div className="mb-4">
+            <label className="form-label fw-bold text-muted">
+              Bathrooms:
+            </label>
+            <input
+              type="number"
+              id="bathrooms"
+              name="bathrooms"
+              className="form-control"
+              placeholder="Enter number of bathrooms"
+              value={bathrooms}
+              onChange={(e) => setBathrooms(e.target.value)}
+            />
+          </div>
+
+          {/* Size In Sq Ft */}
+          <div className="mb-4">
+            <label className="form-label fw-bold text-muted">
+              Size In Sq Ft:
+            </label>
+            <input
+              type="number"
+              id="sizeInSqFt"
+              name="sizeInSqFt"
+              className="form-control"
+              placeholder="Enter size in sq ft"
+              value={sizeInSqFt}
+              onChange={(e) => setSizeInSqFt(e.target.value)}
+              required
+            />
+          </div>
+
+          {/* Images */}
+          <div className="mb-4">
+            <label className="form-label fw-bold text-muted">
+              Images:
+            </label>
+            <input
+              type="file"
+              id="images"
+              name="images"
+              className="form-control"
+              multiple
+              onChange={(e) => setImages(e.target.files)}
+            />
+          </div>
+
+          {/* Submit Button */}
           <div className="d-flex justify-content-between align-items-center">
             <button type="submit" className="btn btn-primary d-flex align-items-center gap-2">
               Post
             </button>
-            <span className="text-muted small">Max 280 characters</span>
           </div>
         </form>
       </div>
