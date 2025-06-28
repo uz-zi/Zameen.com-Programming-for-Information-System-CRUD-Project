@@ -1,6 +1,25 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
 const SetupABMId = () => {
+  const [profile, setProfile] = useState(null);
+  const userId = '1';
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const res = await axios.get(`http://localhost:3000/user/userProfile?id=${userId}`);
+        console.log("User profile fetched: ", res.data);
+        setProfile(res.data);
+      } catch (err) {
+        console.error("Failed to fetch user profile:", err);
+      }
+    };
+
+    fetchUserProfile();
+  }, []);
+
+
   return (
     <div className="container my-5" style={{ backgroundColor: "#f4f4f0" }}>
       <div className="row justify-content-center">
@@ -8,6 +27,7 @@ const SetupABMId = () => {
           <div className="mt-4 px-3">
             <h1 className="display-5 fw-semibold py-3">Profile</h1>
 
+            {profile ? (
             <form className="my-4">
               {/* Name */}
               <div className="mb-3">
@@ -17,6 +37,7 @@ const SetupABMId = () => {
                   className="form-control"
                   id="name"
                   placeholder="Your name"
+                  value={profile.FirstName || ""}
                 />
               </div>
 
@@ -29,6 +50,30 @@ const SetupABMId = () => {
                     id="handle"
                     name="handle"
                     placeholder="username"
+                    value={profile.LastName || ""}
+                  />
+              </div>
+               <div className="mb-3">
+                <label htmlFor="handle" className="form-label fw-semibold">Phone number</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="handle"
+                    name="handle"
+                    placeholder="phone number"
+                    value={profile.PhoneNumber || ""}
+                  />
+              </div>
+
+               <div className="mb-3">
+                <label htmlFor="handle" className="form-label fw-semibold">Email</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="handle"
+                    name="handle"
+                    placeholder="Email"
+                    value={profile.Email || ""}
                   />
               </div>
 
@@ -60,6 +105,7 @@ const SetupABMId = () => {
                   className="form-control"
                   id="bio"
                   placeholder="Write Your Bio"
+                  value={profile.Bio || ""}
                 />
               </div>
 
@@ -76,6 +122,9 @@ const SetupABMId = () => {
               </div>
 
             </form>
+            ) : (
+  <div>Loading profile...</div>
+  )}
           </div>
         </div>
       </div>

@@ -1,6 +1,12 @@
-import React from 'react';
+import { useNavigate } from "react-router-dom";
 
 const RealEstateUI = () => {
+  const navigate = useNavigate();
+
+  const handleResetSearch = () => {
+    navigate("/UploadPosts");
+  };
+
   return (
     <>
     {/*bootstrap navbar */}
@@ -67,7 +73,7 @@ const RealEstateUI = () => {
         </div>
 
         <div className="d-flex gap-3 my-3">
-          <button className="btn btn-link text-danger">Reset Search</button>
+          <button className="btn btn-link text-danger" onClick={handleResetSearch}>Reset Search</button>
         </div>
       </div>
     </div>
