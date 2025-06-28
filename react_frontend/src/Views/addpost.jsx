@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 const PostForm = () => {
   const [title, setTitle] = useState('');
@@ -13,23 +14,36 @@ const PostForm = () => {
   const [sizeInSqFt, setSizeInSqFt] = useState('');
   const [images, setImages] = useState([]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const formData = new FormData();
-    formData.append('title', title);
-    formData.append('description', description);
-    formData.append('price', price);
-    formData.append('propertyType', propertyType);
-    formData.append('address', address);
-    formData.append('city', city);
-    formData.append('area', area);
-    formData.append('bedrooms', bedrooms);
-    formData.append('bathrooms', bathrooms);
-    formData.append('sizeInSqFt', sizeInSqFt);
-    for (let i = 0; i < images.length; i++) {
-      formData.append('images', images[i]);
+
+    const postData = {
+      title,
+      description,
+      price,
+      propertyType,
+      address,
+      city,
+      area,
+      bedrooms,
+      bathrooms,
+      sizeInSqFt,
+    };
+
+    try {
+      const response = await axios.post(
+        'http://localhost:3000/user/addpropertypost', // Adjust based on your backend
+        postData
+      );
+
+      if (response.data.success) {
+        alert('Post created successfully!');
+        // reset form or navigate
+      }
+    } catch (error) {
+      console.error('Error creating post:', error);
+      alert('Failed to create post');
     }
-    // Send the form data to the server
   };
 
   return (

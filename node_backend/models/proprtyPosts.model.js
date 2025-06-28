@@ -1,6 +1,6 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config");
-const User = require("./User");
+const User = require("./users.model");
 
 const PropertyPost = sequelize.define("PropertyPost", {
   PostID: {

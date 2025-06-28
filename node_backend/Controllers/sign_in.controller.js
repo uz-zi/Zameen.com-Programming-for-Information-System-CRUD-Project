@@ -1,4 +1,5 @@
 const User = require("../models/users.model");
+const PropertyPost = require('../models/proprtyPosts.model');
 const sequelize = require("../config");
 const bcrypt = require("bcrypt");
 
@@ -78,8 +79,45 @@ const userProfile = async (req, res) => {
   }
 };
 
+const createPropertyPost = async (req, res) => {
+  try {
+    const {
+      title,
+      description,
+      price,
+      propertyType,
+      address,
+      city,
+      area,
+      bedrooms,
+      bathrooms,
+      sizeInSqFt,
+    } = req.body;
+
+    const newPost = await PropertyPost.create({
+      Title: title,
+      Description: description,
+      Price: price,
+      PropertyType: propertyType,
+      Address: address,
+      City: city,
+      Area: area,
+      Bedrooms: bedrooms || null,
+      Bathrooms: bathrooms || null,
+      SizeInSqFt: sizeInSqFt,
+      UserID: 1
+    });
+
+    res.status(201).json({ message: 'Post created successfully', post: newPost });
+  } catch (error) {
+    console.error('Create Post Error:', error);
+    res.status(500).json({ message: 'Failed to create post', error: error.message });
+  }
+};
+
 module.exports = {
   signInUser,
   signUpUser,
-  userProfile
+  userProfile,
+  createPropertyPost
 }
