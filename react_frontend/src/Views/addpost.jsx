@@ -1,7 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const PostForm = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const postId = location?.state?.postId || null;
+
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
@@ -13,6 +18,31 @@ const PostForm = () => {
   const [bathrooms, setBathrooms] = useState('');
   const [sizeInSqFt, setSizeInSqFt] = useState('');
   const [images, setImages] = useState([]);
+
+  // Fetch post details if editing
+  useEffect(() => {
+    const fetchPostData = async () => {
+      try {
+        const res = await axios.get(`http://localhost:3000/user/propertypost/${postId}`);
+        const data = res.data;
+        setTitle(data.Title);
+        setDescription(data.Description);
+        setPrice(data.Price);
+        setPropertyType(data.PropertyType);
+        setAddress(data.Address);
+        setCity(data.City);
+        setArea(data.Area);
+        setBedrooms(data.Bedrooms);
+        setBathrooms(data.Bathrooms);
+        setSizeInSqFt(data.SizeInSqFt);
+        // Note: images not set here as it's usually URLs or handled differently
+      } catch (err) {
+        console.error("Failed to load post data", err);
+      }
+    };
+
+    if (postId) fetchPostData();
+  }, [postId]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -31,25 +61,41 @@ const PostForm = () => {
     };
 
     try {
-      const response = await axios.post(
-        'http://localhost:3000/user/addpropertypost', // Adjust based on your backend
-        postData
-      );
+      if (postId) {
+        // UPDATE
+        const response = await axios.put(
+          `http://localhost:3000/user/propertypost/${postId}`,
+          postData
+        );
+        if (response.data.success) {
+          alert('Post updated successfully!');
+          navigate('/posts');
+        }
+      } else {
+        // CREATE
+        const response = await axios.post(
+          'http://localhost:3000/user/addpropertypost',
+          postData
+        );
 
-      if (response.data.success) {
-        alert('Post created successfully!');
-        // reset form or navigate
+        console.log("============",response.data)
+        if (response.data.success) {
+          alert('Post created successfully!');
+          navigate('/posts');
+        }
       }
     } catch (error) {
-      console.error('Error creating post:', error);
-      alert('Failed to create post');
+      console.error('Error submitting post:', error);
+      alert('Failed to submit post');
     }
   };
 
   return (
-   <div className="d-flex justify-content-center align-items-center bg-light my-5">
+    <div className="d-flex justify-content-center align-items-center bg-light my-5">
       <div className="card shadow p-4" style={{ maxWidth: '500px', width: '100%' }}>
         <form onSubmit={handleSubmit}>
+          <h4 className="mb-4">{postId ? 'Update Post' : 'Create Post'}</h4>
+
           {/* Title */}
           <div className="mb-4">
             <label className="form-label fw-bold text-muted">
@@ -239,7 +285,7 @@ const PostForm = () => {
           {/* Submit Button */}
           <div className="d-flex justify-content-between align-items-center">
             <button type="submit" className="btn btn-primary d-flex align-items-center gap-2">
-              Post
+              {postId ? 'Update' : 'Post'}
             </button>
           </div>
         </form>

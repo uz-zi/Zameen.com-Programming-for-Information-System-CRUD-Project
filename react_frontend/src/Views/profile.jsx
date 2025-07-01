@@ -3,11 +3,19 @@ import axios from 'axios';
 
 const SetupABMId = () => {
   const [profile, setProfile] = useState(null);
-  const userId = '1';
 
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
+        const storedUser = localStorage.getItem('userData');
+        if (!storedUser) {
+          console.warn('No user data in localStorage');
+          return;
+        }
+
+        const parsedUser = JSON.parse(storedUser);
+        const userId = parsedUser.userId;
+        console.log("--------user id", userId);
         const res = await axios.get(`http://localhost:3000/user/userProfile?id=${userId}`);
         console.log("User profile fetched: ", res.data);
         setProfile(res.data);

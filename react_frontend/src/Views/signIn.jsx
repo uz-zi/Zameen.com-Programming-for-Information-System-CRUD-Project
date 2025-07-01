@@ -1,7 +1,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const SignInForm = () => {
+  const navigate = useNavigate();
+  const handlePostClick = (postId) => {
+    navigate('/homepage');
+  };
+
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -29,6 +35,7 @@ const SignInForm = () => {
 
       if (response.status === 200 || response.status === 201) {
         console.log('Signed in successfully:', response.data);
+        localStorage.setItem('userData', JSON.stringify(response.data));
       } else {
         console.error('Error:', response.statusText);
       }
@@ -72,7 +79,9 @@ const SignInForm = () => {
           <input type="checkbox" className="form-check-input" id="exampleCheck1" />
           <label className="form-check-label" htmlFor="exampleCheck1">Check me out</label>
         </div>
-        <button type="submit" className="btn btn-primary">Submit</button>
+          <button className="btn btn-primary" onClick={() => handlePostClick()}>
+            SignIn
+          </button>
       </form>
     </div>
   );

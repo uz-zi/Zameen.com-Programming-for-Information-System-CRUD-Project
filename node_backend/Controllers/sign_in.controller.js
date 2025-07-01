@@ -145,11 +145,77 @@ const getPropertyPostById = async (req, res) => {
   }
 };
 
+const updatePropertyPost = async (req, res) => {
+  const postId = req.params.id;
+
+  // Destructure lowercase keys from frontend
+  const {
+    title,
+    description,
+    price,
+    propertyType,
+    address,
+    city,
+    area,
+    bedrooms,
+    bathrooms,
+    sizeInSqFt,
+  } = req.body;
+
+  console.log("Received from frontend:", req.body);
+
+  try {
+    const post = await PropertyPost.findOne({
+      where: { PostID: postId }
+    });
+
+    if (!post) {
+      return res.status(404).json({
+        success: false,
+        message: 'Post not found'
+      });
+    }
+
+    // Update using mapped keys
+    await post.update({
+      Title: title,
+      Description: description,
+      Price: price,
+      PropertyType: propertyType,
+      Address: address,
+      City: city,
+      Area: area,
+      Bedrooms: bedrooms,
+      Bathrooms: bathrooms,
+      SizeInSqFt: sizeInSqFt,
+    });
+
+    console.log("Updated post:", post.dataValues);
+
+    return res.status(200).json({
+      success: true,
+      message: 'Property post updated successfully',
+      data: post
+    });
+
+  } catch (error) {
+    console.error('Update error:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Failed to update property post',
+      error: error.message
+    });
+  }
+};
+
+
+
 module.exports = {
   signInUser,
   signUpUser,
   userProfile,
   createPropertyPost,
   getAllPropertyPosts,
-  getPropertyPostById
+  getPropertyPostById,
+  updatePropertyPost
 }

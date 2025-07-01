@@ -8,7 +8,7 @@ const Post = () => {
   const navigate = useNavigate();
 
   const handlePostClick = (postId) => {
-    navigate('/postDetails', { state: { postId } });
+    navigate('/addPost', { state: { postId } });
   };
 
   useEffect(() => {
