@@ -125,10 +125,31 @@ const getAllPropertyPosts = async (req, res) => {
   }
 };
 
+const getPropertyPostById = async (req, res) => {
+  try {
+    const postId = req.params.postId;
+    const propertyPost = await PropertyPost.findOne({
+      where: { PostID: postId },
+      include: [{ model: User, attributes: ['FirstName'] }]
+    });
+
+    if (!propertyPost) {
+      return res.status(404).json({ message: 'Property post not found' });
+    }
+
+    console.log("--------------------",propertyPost);
+    res.json(propertyPost);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error fetching property post' });
+  }
+};
+
 module.exports = {
   signInUser,
   signUpUser,
   userProfile,
   createPropertyPost,
-  getAllPropertyPosts
+  getAllPropertyPosts,
+  getPropertyPostById
 }

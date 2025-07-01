@@ -8,6 +8,7 @@ import Profile from "./Views/profile"
 import ViewPost from "./Views/viewpost"
 import Footer from "./Views/footer"
 import AddPost from "./Views/addpost"
+import PostDetail from "./Views/postDetail";
 
 function App() {
 
@@ -22,6 +23,7 @@ function App() {
           <Route path="/Profile" element={<Profile/>}></Route>
           <Route path="/ViewPost" element={<ViewPost/>}></Route>
           <Route path="/addPost" element={<AddPost/>}></Route>
+          <Route path="/postDetails" element={<PostDetail/>}></Route>
         </Routes>
        </BrowserRouter>
     </>

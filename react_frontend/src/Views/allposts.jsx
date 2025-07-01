@@ -1,13 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+
 
 const Post = () => {
   const [posts, setPosts] = useState([]);
+  const navigate = useNavigate();
+
+  const handlePostClick = (postId) => {
+    navigate('/postDetails', { state: { postId } });
+  };
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         const res = await axios.get('http://localhost:3000/user/allpropertyposts');
+        console.log("---------------", res.data)
         setPosts(res.data);
       } catch (err) {
         console.error('Error fetching posts:', err);
@@ -30,7 +38,9 @@ const Post = () => {
             <h5 className="card-title">{post.Title}</h5>
             <p className="card-text">{post.Description}</p>
             <p className="card-text"><strong>Location:</strong> {post.Area}, {post.City}</p>
-            <a href="#" className="btn btn-primary">Go somewhere</a>
+            <button className="btn btn-primary" onClick={() => handlePostClick(post.PostID)}>
+              View Details
+            </button>
           </div>
         </div>
       ))}
