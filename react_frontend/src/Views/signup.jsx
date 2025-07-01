@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import axios from '../axios';
 
 const SignUpForm = () => {
   const [formData, setFormData] = useState({
@@ -29,7 +29,7 @@ const SignUpForm = () => {
     };
 
     const response = await axios.post(
-      'http://localhost:3000/user/signUpUser',
+      '/user/signUpUser',
       payload,
     );
 

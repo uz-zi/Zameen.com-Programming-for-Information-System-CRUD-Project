@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import axios from '../axios';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -14,7 +14,7 @@ const Post = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const res = await axios.get('http://localhost:3000/user/allpropertyposts');
+        const res = await axios.get('/user/allpropertyposts');
         console.log("---------------", res.data)
         setPosts(res.data);
       } catch (err) {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import axios from '../axios';
 
 const SetupABMId = () => {
   const [profile, setProfile] = useState(null);
@@ -16,7 +16,7 @@ const SetupABMId = () => {
         const parsedUser = JSON.parse(storedUser);
         const userId = parsedUser.userId;
         console.log("--------user id", userId);
-        const res = await axios.get(`http://localhost:3000/user/userProfile?id=${userId}`);
+        const res = await axios.get(`/user/userProfile?id=${userId}`);
         console.log("User profile fetched: ", res.data);
         setProfile(res.data);
       } catch (err) {

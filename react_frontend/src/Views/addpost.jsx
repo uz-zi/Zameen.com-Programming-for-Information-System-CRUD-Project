@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '../axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const PostForm = () => {
@@ -23,7 +23,7 @@ const PostForm = () => {
   useEffect(() => {
     const fetchPostData = async () => {
       try {
-        const res = await axios.get(`http://localhost:3000/user/propertypost/${postId}`);
+        const res = await axios.get(`/user/propertypost/${postId}`);
         const data = res.data;
         setTitle(data.Title);
         setDescription(data.Description);
@@ -64,7 +64,7 @@ const PostForm = () => {
       if (postId) {
         // UPDATE
         const response = await axios.put(
-          `http://localhost:3000/user/propertypost/${postId}`,
+          `/user/propertypost/${postId}`,
           postData
         );
         if (response.data.success) {
@@ -74,7 +74,7 @@ const PostForm = () => {
       } else {
         // CREATE
         const response = await axios.post(
-          'http://localhost:3000/user/addpropertypost',
+          '/user/addpropertypost',
           postData
         );
 

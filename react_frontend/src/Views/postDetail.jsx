@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '../axios';
 import { useLocation } from 'react-router-dom';
 
 const PostDetail = () => {
@@ -10,7 +10,7 @@ const PostDetail = () => {
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const res = await axios.get(`http://localhost:3000/user/propertypost/${postId}`);
+        const res = await axios.get(`/user/propertypost/${postId}`);
         console.log("-------------",res.data)
         setPost(res.data);
       } catch (error) {

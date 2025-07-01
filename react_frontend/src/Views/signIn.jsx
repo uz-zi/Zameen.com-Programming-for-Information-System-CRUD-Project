@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import axios from '../axios';
 import { useNavigate } from 'react-router-dom';
 
 const SignInForm = () => {
@@ -29,7 +29,7 @@ const SignInForm = () => {
       };
 
       const response = await axios.post(
-        'http://localhost:3000/user/signIn',
+        '/user/signIn',
         payload,
       );
 
