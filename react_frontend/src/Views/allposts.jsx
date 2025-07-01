@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import axios from '../axios';
 import { useNavigate } from 'react-router-dom';
 
-
 const Post = () => {
   const [posts, setPosts] = useState([]);
   const navigate = useNavigate();
@@ -11,11 +10,25 @@ const Post = () => {
     navigate('/addPost', { state: { postId } });
   };
 
+  const handleDelete = async (postId) => {
+    const confirmed = window.confirm('Are you sure you want to delete this post?');
+    if (!confirmed) return;
+
+    try {
+      await axios.delete(`/user/deletepost/${postId}`);
+      setPosts((prevPosts) => prevPosts.filter(post => post.PostID !== postId));
+      alert('Post deleted successfully!');
+    } catch (error) {
+      console.error('Failed to delete post:', error);
+      alert('Failed to delete the post.');
+    }
+  };
+
+
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         const res = await axios.get('/user/allpropertyposts');
-        console.log("---------------", res.data)
         setPosts(res.data);
       } catch (err) {
         console.error('Error fetching posts:', err);
@@ -38,8 +51,12 @@ const Post = () => {
             <h5 className="card-title">{post.Title}</h5>
             <p className="card-text">{post.Description}</p>
             <p className="card-text"><strong>Location:</strong> {post.Area}, {post.City}</p>
-            <button className="btn btn-primary" onClick={() => handlePostClick(post.PostID)}>
-              View Details
+
+            <button className="btn btn-primary me-2" onClick={() => handlePostClick(post.PostID)}>
+              Update
+            </button>
+            <button className="btn btn-danger" onClick={() => handleDelete(post.PostID)}>
+              Delete
             </button>
           </div>
         </div>

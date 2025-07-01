@@ -208,6 +208,25 @@ const updatePropertyPost = async (req, res) => {
   }
 };
 
+const deletePost = async (req, res) => {
+  const postId = req.params.postId;
+
+  try {
+    const post = await PropertyPost.findOne({
+      where: { PostID: postId }
+    });
+    if (!post) {
+      return res.status(404).json({ message: 'Post not found' });
+    }
+
+    await post.destroy();
+    return res.status(200).json({ message: 'Post deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting post:', error);
+    return res.status(500).json({ message: 'Server error while deleting post' });
+  }
+};
+
 
 
 module.exports = {
@@ -217,5 +236,6 @@ module.exports = {
   createPropertyPost,
   getAllPropertyPosts,
   getPropertyPostById,
-  updatePropertyPost
+  updatePropertyPost,
+  deletePost
 }
