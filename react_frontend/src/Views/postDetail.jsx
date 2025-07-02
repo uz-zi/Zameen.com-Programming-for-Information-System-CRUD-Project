@@ -32,7 +32,7 @@ const PostDetail = () => {
     Bedrooms,
     Bathrooms,
     SizeInSqFt,
-    Images,
+    Image,
     User,
   } = post;
 
@@ -40,7 +40,11 @@ const PostDetail = () => {
     <div className="product-container" style={{ display: 'flex', gap: '2rem', padding: '1rem' }}>
       <div className="product-image-container" style={{ flex: 1 }}>
         <img
-          src={Images && Images.length > 0 ? Images[0] : 'https://via.placeholder.com/300'}
+          src={
+            Image
+              ? `${import.meta.env.VITE_BACKEND_URL}${Image}`
+              : 'https://via.placeholder.com/300'
+          }
           alt="Product"
           className="main-image"
           style={{ width: '100%', borderRadius: '8px' }}

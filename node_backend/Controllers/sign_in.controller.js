@@ -70,16 +70,24 @@ const createPropertyPost = async (req, res) => {
         Bathrooms: bathrooms || null,
         SizeInSqFt: sizeInSqFt,
         UserID: 1,
-        Images: imagePath ? [imagePath] : []
+        Image: imagePath || null
       });
 
-      res.status(201).json({ success: true, message: 'Post created successfully', post: newPost });
+      res.status(201).json({
+        success: true,
+        message: 'Post created successfully',
+        post: newPost
+      });
     } catch (error) {
       console.error('Create Post Error:', error);
-      res.status(500).json({ message: 'Failed to create post', error: error.message });
+      res.status(500).json({
+        message: 'Failed to create post',
+        error: error.message
+      });
     }
   });
 };
+
 
 const signUpUser = async (req, res) => {
   try {
@@ -227,22 +235,21 @@ const updatePropertyPost = async (req, res) => {
         });
       }
 
-      // Handle optional new image
-      let updatedImages = post.Images || [];
-      if (req.file) {
-        const newImagePath = `/uploads/images/${req.file.filename}`;
-        updatedImages = [newImagePath];
+      // Handle new image upload
+      let newImagePath = post.Image;
 
-        // Optional: delete old image from file system
-        if (post.Images && post.Images.length > 0) {
-          const oldImagePath = path.join(__dirname, '..', post.Images[0]);
+      if (req.file) {
+        newImagePath = `/uploads/images/${req.file.filename}`;
+
+        // Delete old image if it exists
+        if (post.Image) {
+          const oldImagePath = path.join(__dirname, '..', post.Image);
           fs.unlink(oldImagePath, (err) => {
-            if (err) console.error("Error deleting old image:", err.message);
+            if (err) console.error("Failed to delete old image:", err.message);
           });
         }
       }
-
-      // Update post with new data (and new image if provided)
+      debugger
       await post.update({
         Title: title,
         Description: description,
@@ -254,7 +261,7 @@ const updatePropertyPost = async (req, res) => {
         Bedrooms: bedrooms,
         Bathrooms: bathrooms,
         SizeInSqFt: sizeInSqFt,
-        Images: updatedImages,
+        Image: newImagePath,
       });
 
       console.log("Updated post:", post.dataValues);
@@ -262,7 +269,7 @@ const updatePropertyPost = async (req, res) => {
       return res.status(200).json({
         success: true,
         message: 'Property post updated successfully',
-        data: post
+        data: post,
       });
 
     } catch (error) {
@@ -275,6 +282,7 @@ const updatePropertyPost = async (req, res) => {
     }
   });
 };
+
 
 
 const deletePost = async (req, res) => {

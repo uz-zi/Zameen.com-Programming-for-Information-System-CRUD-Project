@@ -17,8 +17,8 @@ const PostForm = () => {
   const [bedrooms, setBedrooms] = useState('');
   const [bathrooms, setBathrooms] = useState('');
   const [sizeInSqFt, setSizeInSqFt] = useState('');
-  const [images, setImages] = useState([]);
-  const [imagePreviews, setImagePreviews] = useState([]);
+  const [image, setImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
 
   // Fetch post details if editing
   useEffect(() => {
@@ -37,8 +37,8 @@ const PostForm = () => {
         setBedrooms(data.Bedrooms);
         setBathrooms(data.Bathrooms);
         setSizeInSqFt(data.SizeInSqFt);
-        if (data.Images && data.Images.length > 0) {
-          setImagePreviews([`${import.meta.env.VITE_BACKEND_URL}${data.Images[0]}`]);
+        if (data.Image) {
+          setImagePreview(`${import.meta.env.VITE_BACKEND_URL}${data.Image}`);
         }
       } catch (err) {
         console.error("Failed to load post data", err);
@@ -49,12 +49,16 @@ const PostForm = () => {
   }, [postId]);
 
   const handleImageChange = (e) => {
-    setImages(e.target.files);
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      setImagePreviews([event.target.result]);
-    };
-    reader.readAsDataURL(e.target.files[0]);
+    const file = e.target.files[0];
+    setImage(file);
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        setImagePreview(event.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -72,8 +76,8 @@ const PostForm = () => {
     formData.append('bathrooms', bathrooms);
     formData.append('sizeInSqFt', sizeInSqFt);
 
-    if (images && images.length > 0) {
-      formData.append('image', images[0]);
+    if (image) {
+      formData.append('image', image);
     }
 
     try {
@@ -83,7 +87,7 @@ const PostForm = () => {
         });
         if (response.data.success) {
           alert('Post updated successfully!');
-          navigate('/posts');
+          navigate('/UploadPosts');
         }
       } else {
         const response = await axios.post('/user/addpropertypost', formData, {
@@ -92,7 +96,7 @@ const PostForm = () => {
 
         if (response.data.success) {
           alert('Post created successfully!');
-          navigate('/posts');
+          navigate('/UploadPosts');
         }
       }
     } catch (error) {
@@ -114,8 +118,6 @@ const PostForm = () => {
             </label>
             <input
               type="text"
-              id="title"
-              name="title"
               className="form-control"
               placeholder="Enter title"
               value={title}
@@ -130,8 +132,6 @@ const PostForm = () => {
               Description:
             </label>
             <textarea
-              id="description"
-              name="description"
               rows="4"
               className="form-control"
               placeholder="Enter description"
@@ -148,8 +148,6 @@ const PostForm = () => {
             </label>
             <input
               type="number"
-              id="price"
-              name="price"
               className="form-control"
               placeholder="Enter price"
               value={price}
@@ -164,8 +162,6 @@ const PostForm = () => {
               Property Type:
             </label>
             <select
-              id="propertyType"
-              name="propertyType"
               className="form-control"
               value={propertyType}
               onChange={(e) => setPropertyType(e.target.value)}
@@ -185,8 +181,6 @@ const PostForm = () => {
             </label>
             <input
               type="text"
-              id="address"
-              name="address"
               className="form-control"
               placeholder="Enter address"
               value={address}
@@ -202,8 +196,6 @@ const PostForm = () => {
             </label>
             <input
               type="text"
-              id="city"
-              name="city"
               className="form-control"
               placeholder="Enter city"
               value={city}
@@ -219,8 +211,6 @@ const PostForm = () => {
             </label>
             <input
               type="text"
-              id="area"
-              name="area"
               className="form-control"
               placeholder="Enter area"
               value={area}
@@ -236,8 +226,6 @@ const PostForm = () => {
             </label>
             <input
               type="number"
-              id="bedrooms"
-              name="bedrooms"
               className="form-control"
               placeholder="Enter number of bedrooms"
               value={bedrooms}
@@ -252,8 +240,6 @@ const PostForm = () => {
             </label>
             <input
               type="number"
-              id="bathrooms"
-              name="bathrooms"
               className="form-control"
               placeholder="Enter number of bathrooms"
               value={bathrooms}
@@ -268,8 +254,6 @@ const PostForm = () => {
             </label>
             <input
               type="number"
-              id="sizeInSqFt"
-              name="sizeInSqFt"
               className="form-control"
               placeholder="Enter size in sq ft"
               value={sizeInSqFt}
@@ -285,21 +269,17 @@ const PostForm = () => {
             </label>
             <input
               type="file"
-              id="images"
-              name="images"
+              accept="image/*"
               className="form-control"
-              multiple
               onChange={handleImageChange}
             />
-
-            {imagePreviews.length > 0 && (
-  <img
-    src={imagePreviews[0]}
-    alt="Selected or Existing Image"
-    style={{ width: '100px', height: '100px', objectFit: 'cover' }}
-  />
-)}
-
+            {imagePreview && (
+              <img
+                src={imagePreview}
+                alt="Selected or Existing"
+                style={{ width: '100px', height: '100px', objectFit: 'cover', marginTop: '10px' }}
+              />
+            )}
           </div>
 
           {/* Submit Button */}

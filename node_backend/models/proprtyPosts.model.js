@@ -48,10 +48,10 @@ const PropertyPost = sequelize.define("PropertyPost", {
     type: DataTypes.FLOAT,
     allowNull: false
   },
-  Images: {
-    type: DataTypes.ARRAY(DataTypes.STRING),
+  Image: {
+    type: DataTypes.STRING,
     allowNull: true
-  },
+  }
 });
 
 // Define association

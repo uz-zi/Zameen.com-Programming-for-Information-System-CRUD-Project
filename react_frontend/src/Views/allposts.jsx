@@ -6,8 +6,12 @@ const Post = () => {
   const [posts, setPosts] = useState([]);
   const navigate = useNavigate();
 
-  const handlePostClick = (postId) => {
+  const handleUpdate = (postId) => {
     navigate('/addPost', { state: { postId } });
+  };
+
+  const handlePostClick = (postId) => {
+    navigate('/ViewPost', { state: { postId } });
   };
 
   const handleDelete = async (postId) => {
@@ -23,7 +27,6 @@ const Post = () => {
       alert('Failed to delete the post.');
     }
   };
-
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -44,20 +47,28 @@ const Post = () => {
       {posts.map((post, index) => (
         <div className="card w-25" key={index}>
           <img
-            src={post.Images && post.Images.length > 0 ? `${import.meta.env.VITE_BACKEND_URL}${post.Images[0]}` : 'https://plus.unsplash.com/premium_photo-1661963869605-4b5f4c8e55f2?fm=jpg'}
+            src={
+              post.Image
+                ? `${import.meta.env.VITE_BACKEND_URL}${post.Image}`
+                : 'https://plus.unsplash.com/premium_photo-1661963869605-4b5f4c8e55f2?fm=jpg'
+            }
             className="card-img-top"
             alt="Post"
+            style={{ height: '300px', objectFit: 'cover' }}
           />
           <div className="card-body">
             <h5 className="card-title">{post.Title}</h5>
             <p className="card-text">{post.Description}</p>
             <p className="card-text"><strong>Location:</strong> {post.Area}, {post.City}</p>
 
-            <button className="btn btn-primary me-2" onClick={() => handlePostClick(post.PostID)}>
+            <button className="btn btn-primary me-2" onClick={() => handleUpdate(post.PostID)}>
               Update
             </button>
-            <button className="btn btn-danger" onClick={() => handleDelete(post.PostID)}>
+            <button className="btn btn-danger me-2" onClick={() => handleDelete(post.PostID)}>
               Delete
+            </button>
+            <button className="btn btn-success" onClick={() => handlePostClick(post.PostID)}>
+              Detail
             </button>
           </div>
         </div>
