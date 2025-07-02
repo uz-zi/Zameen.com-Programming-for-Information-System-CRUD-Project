@@ -45,50 +45,50 @@ const PostForm = () => {
   }, [postId]);
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    const postData = {
-      title,
-      description,
-      price,
-      propertyType,
-      address,
-      city,
-      area,
-      bedrooms,
-      bathrooms,
-      sizeInSqFt,
-    };
+  const formData = new FormData();
+  formData.append('title', title);
+  formData.append('description', description);
+  formData.append('price', price);
+  formData.append('propertyType', propertyType);
+  formData.append('address', address);
+  formData.append('city', city);
+  formData.append('area', area);
+  formData.append('bedrooms', bedrooms);
+  formData.append('bathrooms', bathrooms);
+  formData.append('sizeInSqFt', sizeInSqFt);
 
-    try {
-      if (postId) {
-        // UPDATE
-        const response = await axios.put(
-          `/user/propertypost/${postId}`,
-          postData
-        );
-        if (response.data.success) {
-          alert('Post updated successfully!');
-          navigate('/posts');
-        }
-      } else {
-        // CREATE
-        const response = await axios.post(
-          '/user/addpropertypost',
-          postData
-        );
+  if (images && images.length > 0) {
+    formData.append('image', images[0]); // only 1 image
+  }
 
-        console.log("============",response.data)
-        if (response.data.success) {
-          alert('Post created successfully!');
-          navigate('/posts');
-        }
+  try {
+    if (postId) {
+      // Optional: If you also want to handle image update, similar approach applies.
+      const response = await axios.put(`/user/propertypost/${postId}`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      if (response.data.success) {
+        alert('Post updated successfully!');
+        navigate('/posts');
       }
-    } catch (error) {
-      console.error('Error submitting post:', error);
-      alert('Failed to submit post');
+    } else {
+      const response = await axios.post('/user/addpropertypost', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+
+      if (response.data.success) {
+        alert('Post created successfully!');
+        navigate('/posts');
+      }
     }
-  };
+  } catch (error) {
+    console.error('Error submitting post:', error);
+    alert('Failed to submit post');
+  }
+};
+
 
   return (
     <div className="d-flex justify-content-center align-items-center bg-light my-5">

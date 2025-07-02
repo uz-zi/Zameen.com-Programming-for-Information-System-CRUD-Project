@@ -1,7 +1,85 @@
 const User = require("../models/users.model");
 const PropertyPost = require('../models/proprtyPosts.model');
-const sequelize = require("../config");
 const bcrypt = require("bcrypt");
+const multer = require("multer");
+const fs = require('fs');
+const path = require('path');
+
+// multer setup to uploads the image
+const directory = path.join(__dirname, '..', 'uploads', 'images');
+
+fs.mkdirSync(directory, { recursive: true });
+
+const image_storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, directory);
+  },
+  filename: function (req, file, cb) {
+    cb(null, `${Date.now()}-${file.originalname}`);
+  },
+});
+
+const image_fileFilter = (req, file, cb) => {
+  if (!file.originalname.match(/\.(gif|GIF|jpg|JPG|jpeg|JPEG|png|PNG)$/)) {
+    req.fileValidationError = "Only image files are allowed!";
+    return cb(new Error("Only image files are allowed!"), false);
+  }
+  cb(null, true);
+};
+
+const image_upload = multer({
+  storage: image_storage,
+  fileFilter: image_fileFilter,
+});
+
+const createPropertyPost = async (req, res) => {
+  image_upload.single("image")(req, res, async function (err) {
+    if (err) {
+      console.error("Multer error:", err);
+      return res.status(400).json({ message: err.message });
+    }
+
+    try {
+      const {
+        title,
+        description,
+        price,
+        propertyType,
+        address,
+        city,
+        area,
+        bedrooms,
+        bathrooms,
+        sizeInSqFt,
+      } = req.body;
+
+      let imagePath = null;
+      if (req.file) {
+        imagePath = `/uploads/images/${req.file.filename}`;
+      }
+
+      const newPost = await PropertyPost.create({
+        Title: title,
+        Description: description,
+        Price: price,
+        PropertyType: propertyType,
+        Address: address,
+        City: city,
+        Area: area,
+        Bedrooms: bedrooms || null,
+        Bathrooms: bathrooms || null,
+        SizeInSqFt: sizeInSqFt,
+        UserID: 1,
+        Images: imagePath ? [imagePath] : []
+      });
+
+      res.status(201).json({ success: true, message: 'Post created successfully', post: newPost });
+    } catch (error) {
+      console.error('Create Post Error:', error);
+      res.status(500).json({ message: 'Failed to create post', error: error.message });
+    }
+  });
+};
 
 const signUpUser = async (req, res) => {
   try {
@@ -79,41 +157,8 @@ const userProfile = async (req, res) => {
   }
 };
 
-const createPropertyPost = async (req, res) => {
-  try {
-    const {
-      title,
-      description,
-      price,
-      propertyType,
-      address,
-      city,
-      area,
-      bedrooms,
-      bathrooms,
-      sizeInSqFt,
-    } = req.body;
 
-    const newPost = await PropertyPost.create({
-      Title: title,
-      Description: description,
-      Price: price,
-      PropertyType: propertyType,
-      Address: address,
-      City: city,
-      Area: area,
-      Bedrooms: bedrooms || null,
-      Bathrooms: bathrooms || null,
-      SizeInSqFt: sizeInSqFt,
-      UserID: 1
-    });
 
-    res.status(201).json({ message: 'Post created successfully', post: newPost });
-  } catch (error) {
-    console.error('Create Post Error:', error);
-    res.status(500).json({ message: 'Failed to create post', error: error.message });
-  }
-};
 
 const getAllPropertyPosts = async (req, res) => {
   try {
