@@ -18,12 +18,14 @@ const PostForm = () => {
   const [bathrooms, setBathrooms] = useState('');
   const [sizeInSqFt, setSizeInSqFt] = useState('');
   const [images, setImages] = useState([]);
+  const [imagePreviews, setImagePreviews] = useState([]);
 
   // Fetch post details if editing
   useEffect(() => {
     const fetchPostData = async () => {
       try {
         const res = await axios.get(`/user/propertypost/${postId}`);
+        console.log("==========update the post",res.data)
         const data = res.data;
         setTitle(data.Title);
         setDescription(data.Description);
@@ -35,7 +37,9 @@ const PostForm = () => {
         setBedrooms(data.Bedrooms);
         setBathrooms(data.Bathrooms);
         setSizeInSqFt(data.SizeInSqFt);
-        // Note: images not set here as it's usually URLs or handled differently
+        if (data.Images && data.Images.length > 0) {
+          setImagePreviews([`${import.meta.env.VITE_BACKEND_URL}${data.Images[0]}`]);
+        }
       } catch (err) {
         console.error("Failed to load post data", err);
       }
@@ -44,51 +48,58 @@ const PostForm = () => {
     if (postId) fetchPostData();
   }, [postId]);
 
+  const handleImageChange = (e) => {
+    setImages(e.target.files);
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      setImagePreviews([event.target.result]);
+    };
+    reader.readAsDataURL(e.target.files[0]);
+  };
+
   const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  const formData = new FormData();
-  formData.append('title', title);
-  formData.append('description', description);
-  formData.append('price', price);
-  formData.append('propertyType', propertyType);
-  formData.append('address', address);
-  formData.append('city', city);
-  formData.append('area', area);
-  formData.append('bedrooms', bedrooms);
-  formData.append('bathrooms', bathrooms);
-  formData.append('sizeInSqFt', sizeInSqFt);
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('description', description);
+    formData.append('price', price);
+    formData.append('propertyType', propertyType);
+    formData.append('address', address);
+    formData.append('city', city);
+    formData.append('area', area);
+    formData.append('bedrooms', bedrooms);
+    formData.append('bathrooms', bathrooms);
+    formData.append('sizeInSqFt', sizeInSqFt);
 
-  if (images && images.length > 0) {
-    formData.append('image', images[0]); // only 1 image
-  }
-
-  try {
-    if (postId) {
-      // Optional: If you also want to handle image update, similar approach applies.
-      const response = await axios.put(`/user/propertypost/${postId}`, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      });
-      if (response.data.success) {
-        alert('Post updated successfully!');
-        navigate('/posts');
-      }
-    } else {
-      const response = await axios.post('/user/addpropertypost', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      });
-
-      if (response.data.success) {
-        alert('Post created successfully!');
-        navigate('/posts');
-      }
+    if (images && images.length > 0) {
+      formData.append('image', images[0]);
     }
-  } catch (error) {
-    console.error('Error submitting post:', error);
-    alert('Failed to submit post');
-  }
-};
 
+    try {
+      if (postId) {
+        const response = await axios.put(`/user/propertypost/${postId}`, formData, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        });
+        if (response.data.success) {
+          alert('Post updated successfully!');
+          navigate('/posts');
+        }
+      } else {
+        const response = await axios.post('/user/addpropertypost', formData, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        });
+
+        if (response.data.success) {
+          alert('Post created successfully!');
+          navigate('/posts');
+        }
+      }
+    } catch (error) {
+      console.error('Error submitting post:', error);
+      alert('Failed to submit post');
+    }
+  };
 
   return (
     <div className="d-flex justify-content-center align-items-center bg-light my-5">
@@ -278,8 +289,17 @@ const PostForm = () => {
               name="images"
               className="form-control"
               multiple
-              onChange={(e) => setImages(e.target.files)}
+              onChange={handleImageChange}
             />
+
+            {imagePreviews.length > 0 && (
+  <img
+    src={imagePreviews[0]}
+    alt="Selected or Existing Image"
+    style={{ width: '100px', height: '100px', objectFit: 'cover' }}
+  />
+)}
+
           </div>
 
           {/* Submit Button */}

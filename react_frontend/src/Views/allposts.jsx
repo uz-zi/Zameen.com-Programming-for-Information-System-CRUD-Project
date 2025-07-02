@@ -29,6 +29,7 @@ const Post = () => {
     const fetchPosts = async () => {
       try {
         const res = await axios.get('/user/allpropertyposts');
+        console.log("=========", res.data);
         setPosts(res.data);
       } catch (err) {
         console.error('Error fetching posts:', err);
@@ -43,7 +44,7 @@ const Post = () => {
       {posts.map((post, index) => (
         <div className="card w-25" key={index}>
           <img
-            src={post.Images && post.Images.length > 0 ? post.Images[0] : 'https://plus.unsplash.com/premium_photo-1661963869605-4b5f4c8e55f2?fm=jpg'}
+            src={post.Images && post.Images.length > 0 ? `${import.meta.env.VITE_BACKEND_URL}${post.Images[0]}` : 'https://plus.unsplash.com/premium_photo-1661963869605-4b5f4c8e55f2?fm=jpg'}
             className="card-img-top"
             alt="Post"
           />

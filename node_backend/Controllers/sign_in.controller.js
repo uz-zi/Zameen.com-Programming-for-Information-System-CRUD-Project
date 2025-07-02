@@ -191,67 +191,91 @@ const getPropertyPostById = async (req, res) => {
 };
 
 const updatePropertyPost = async (req, res) => {
-  const postId = req.params.id;
-
-  // Destructure lowercase keys from frontend
-  const {
-    title,
-    description,
-    price,
-    propertyType,
-    address,
-    city,
-    area,
-    bedrooms,
-    bathrooms,
-    sizeInSqFt,
-  } = req.body;
-
-  console.log("Received from frontend:", req.body);
-
-  try {
-    const post = await PropertyPost.findOne({
-      where: { PostID: postId }
-    });
-
-    if (!post) {
-      return res.status(404).json({
-        success: false,
-        message: 'Post not found'
-      });
+  image_upload.single("image")(req, res, async function (err) {
+    if (err) {
+      console.error("Multer error:", err);
+      return res.status(400).json({ message: err.message });
     }
 
-    // Update using mapped keys
-    await post.update({
-      Title: title,
-      Description: description,
-      Price: price,
-      PropertyType: propertyType,
-      Address: address,
-      City: city,
-      Area: area,
-      Bedrooms: bedrooms,
-      Bathrooms: bathrooms,
-      SizeInSqFt: sizeInSqFt,
-    });
+    const postId = req.params.id;
 
-    console.log("Updated post:", post.dataValues);
+    // Destructure lowercase keys from frontend
+    const {
+      title,
+      description,
+      price,
+      propertyType,
+      address,
+      city,
+      area,
+      bedrooms,
+      bathrooms,
+      sizeInSqFt,
+    } = req.body;
 
-    return res.status(200).json({
-      success: true,
-      message: 'Property post updated successfully',
-      data: post
-    });
+    console.log("Received from frontend:", req.body);
 
-  } catch (error) {
-    console.error('Update error:', error);
-    return res.status(500).json({
-      success: false,
-      message: 'Failed to update property post',
-      error: error.message
-    });
-  }
+    try {
+      const post = await PropertyPost.findOne({
+        where: { PostID: postId }
+      });
+
+      if (!post) {
+        return res.status(404).json({
+          success: false,
+          message: 'Post not found'
+        });
+      }
+
+      // Handle optional new image
+      let updatedImages = post.Images || [];
+      if (req.file) {
+        const newImagePath = `/uploads/images/${req.file.filename}`;
+        updatedImages = [newImagePath];
+
+        // Optional: delete old image from file system
+        if (post.Images && post.Images.length > 0) {
+          const oldImagePath = path.join(__dirname, '..', post.Images[0]);
+          fs.unlink(oldImagePath, (err) => {
+            if (err) console.error("Error deleting old image:", err.message);
+          });
+        }
+      }
+
+      // Update post with new data (and new image if provided)
+      await post.update({
+        Title: title,
+        Description: description,
+        Price: price,
+        PropertyType: propertyType,
+        Address: address,
+        City: city,
+        Area: area,
+        Bedrooms: bedrooms,
+        Bathrooms: bathrooms,
+        SizeInSqFt: sizeInSqFt,
+        Images: updatedImages,
+      });
+
+      console.log("Updated post:", post.dataValues);
+
+      return res.status(200).json({
+        success: true,
+        message: 'Property post updated successfully',
+        data: post
+      });
+
+    } catch (error) {
+      console.error('Update error:', error);
+      return res.status(500).json({
+        success: false,
+        message: 'Failed to update property post',
+        error: error.message
+      });
+    }
+  });
 };
+
 
 const deletePost = async (req, res) => {
   const postId = req.params.postId;
