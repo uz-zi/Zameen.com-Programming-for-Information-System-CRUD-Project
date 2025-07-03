@@ -11,7 +11,7 @@ const Post = () => {
   };
 
   const handlePostClick = (postId) => {
-    navigate('/ViewPost', { state: { postId } });
+    navigate('/postDetails', { state: { postId } });
   };
 
   const handleDelete = async (postId) => {
