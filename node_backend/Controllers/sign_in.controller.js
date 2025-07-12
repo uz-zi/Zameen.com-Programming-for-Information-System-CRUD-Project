@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 const multer = require("multer");
 const fs = require('fs');
 const path = require('path');
+const { Sequelize, Op } = require('sequelize');
 
 // multer setup to uploads the image
 const directory = path.join(__dirname, '..', 'uploads', 'images');
@@ -178,6 +179,37 @@ const getAllPropertyPosts = async (req, res) => {
   }
 };
 
+// resolved error using the Chatgpt
+const searchPosts = async (req, res) => {
+  try {
+    const search = req.query.search;
+
+    if (!search) {
+      return res.status(400).json({ error: 'Search query missing' });
+    }
+
+    const posts = await PropertyPost.findAll({
+      where: {
+        [Op.or]: [
+          { City: { [Op.iLike]: `%${search}%` } },
+          { Area: { [Op.iLike]: `%${search}%` } },
+          Sequelize.where(
+            Sequelize.cast(Sequelize.col('PropertyType'), 'TEXT'),
+            { [Op.iLike]: `%${search}%` }
+          ),
+          { Title: { [Op.iLike]: `%${search}%` } },
+          { Description: { [Op.iLike]: `%${search}%` } }
+        ]
+      }
+    });
+
+    res.json(posts);
+  } catch (error) {
+    console.error('Error searching posts:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
 const getPropertyPostById = async (req, res) => {
   try {
     const postId = req.params.postId;
@@ -314,5 +346,6 @@ module.exports = {
   getAllPropertyPosts,
   getPropertyPostById,
   updatePropertyPost,
-  deletePost
+  deletePost,
+  searchPosts
 }
