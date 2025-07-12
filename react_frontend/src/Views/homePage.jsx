@@ -4,6 +4,7 @@ import { useState } from "react";
 const RealEstateUI = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
+  const [showFilter, setShowFilter] = useState(false);
 
   const handleResetSearch = () => {
     setSearchQuery("");
@@ -15,6 +16,10 @@ const RealEstateUI = () => {
     if (searchQuery) {
       navigate("/UploadPosts", { state: { searchquery: searchQuery } });
     }
+  };
+
+  const handleShowFilter = () => {
+    navigate("/UploadPosts", { state: { showFilter: true } });
   };
 
   const addpost = () => {
@@ -51,9 +56,9 @@ const RealEstateUI = () => {
 
             {/* Buttons */}
             <div className="d-flex gap-3 my-2">
+              <button className="btn btn-outline-info" onClick={handleShowFilter}>Add Filter</button>
               <button className="btn btn-outline-primary" onClick={addpost}>Add a new post</button>
               <button className="btn btn-outline-secondary" onClick={viewprofile}>View Profile</button>
-              <button className="btn btn-outline-success" onClick={handleResetSearch}>View Posts</button>
             </div>
           </div>
         </div>

@@ -166,8 +166,41 @@ const userProfile = async (req, res) => {
   }
 };
 
+const filterPosts = async (req, res) => {
+  try {
+    const { minPrice, maxPrice, propertyType, bedrooms } = req.query;
+    const whereClause = {};
 
+    if (minPrice) {
+      whereClause.Price = { [Op.gte]: Number(minPrice) };
+    }
 
+    if (maxPrice) {
+      whereClause.Price = {
+        ...(whereClause.Price || {}),
+        [Op.lte]: Number(maxPrice),
+      };
+    }
+
+    if (propertyType) {
+      whereClause.PropertyType = propertyType;
+    }
+
+    if (bedrooms) {
+      whereClause.Bedrooms = Number(bedrooms);
+    }
+
+    const posts = await PropertyPost.findAll({
+      where: whereClause,
+      order: [['createdAt', 'DESC']],
+    });
+
+    res.json(posts);
+  } catch (error) {
+    console.error('Error filtering posts:', error);
+    res.status(500).json({ error: 'Server error while filtering posts' });
+  }
+};
 
 const getAllPropertyPosts = async (req, res) => {
   try {
@@ -347,5 +380,6 @@ module.exports = {
   getPropertyPostById,
   updatePropertyPost,
   deletePost,
-  searchPosts
+  searchPosts,
+  filterPosts
 }
