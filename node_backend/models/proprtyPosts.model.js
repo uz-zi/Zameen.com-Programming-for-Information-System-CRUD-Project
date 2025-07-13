@@ -54,8 +54,4 @@ const PropertyPost = sequelize.define("PropertyPost", {
   }
 });
 
-// Define association
-User.hasMany(PropertyPost, { foreignKey: "UserID", onDelete: "CASCADE" });
-PropertyPost.belongsTo(User, { foreignKey: "UserID" });
-
 module.exports = PropertyPost;
