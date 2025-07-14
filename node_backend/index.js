@@ -1,3 +1,5 @@
+//https://github.com/uz-zi/CultureConnect
+//https://github.com/uz-zi/Automotive-Studio
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');

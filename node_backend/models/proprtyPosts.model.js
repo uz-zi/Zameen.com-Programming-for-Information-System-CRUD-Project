@@ -1,3 +1,5 @@
+//https://github.com/uz-zi/CultureConnect
+//https://github.com/uz-zi/Automotive-Studio
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config");
 const User = require("./users.model");

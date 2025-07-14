@@ -1,3 +1,5 @@
+//https://sequelize.org/docs/v7/databases/postgres/
+//https://youtu.be/bOHysWYMZM0?si=4iRR2cj-_IxgaNw2
 const { Sequelize, DataTypes } = require("sequelize");
 
 const sequelize = new Sequelize(

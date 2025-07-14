@@ -1,3 +1,5 @@
+//https://github.com/uz-zi/CultureConnect
+//https://github.com/uz-zi/Automotive-Studio
 const User = require("../models/users.model");
 const PropertyPost = require('../models/proprtyPosts.model');
 const bcrypt = require("bcrypt");
