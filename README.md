@@ -3,9 +3,6 @@ Zameen.com is a Pakistan-based real estate company. This company was founded by 
 
 More than 200+ employees are currently working in this company, and it has become the most trusted and visited real estate website in Pakistan. Because of this company's services real estate market has become more transparent.
 
-# Problem
-Currently, the company is facing the issue of ghost postings. Some sellers create fake listings, and when buyers visit the listed property, they find that it does not exist. Instead, the real estate agents show them different properties. The company is now seeking a solution to this problem.
-
 ### [Company Location](https://maps.app.goo.gl/rWNqMtQ9zYMZUuRK6)  
 ### [Website Link](https://www.zameen.com/)
 
@@ -24,6 +21,8 @@ A full-stack real estate listing web application inspired by **Zameen.com**. Thi
 - Sequelize ORM for database operations
 - React frontend with **Axios** for API calls
 - .env support for secure environment variables
+- filter functionality depending on house, price, plot, and apartment
+- search functionality is present
 
 ## Tech Stack
 
@@ -34,11 +33,13 @@ A full-stack real estate listing web application inspired by **Zameen.com**. Thi
 - PostgreSQL
 - Multer (for image upload)
 - dotenv
+- jest
 
 ### Frontend:
 - React (Vite)
 - Axios
 - CSS (custom)
+- cypress
 
 ## 🗃️ Database Schema
 
@@ -80,15 +81,21 @@ A full-stack real estate listing web application inspired by **Zameen.com**. Thi
 │ ├── models
 │ │ ├── users.model.js
 │ │ └── propertyPost.model.js
-│ ├── config
+│ ├── config.js
 │ │ └── database.js (.env used)
 │ ├── routes
+│ ├── tests
+│ ├── ├── controllers
+│ ├── ├── └── property.controller.test.js
 │ ├── controllers
 | ├── uploads
 | ├── ├── images
 │ └── index.js
 
 ├── frontend
+│ ├── cypress
+│ ├── ├── e2e
+│ ├── ├── └── userSignIn.cy.js
 │ ├── src
 │ │ ├── Views
 │ │ │ ├── AddPost.jsx
@@ -171,6 +178,82 @@ npm install
 ```bash
 npm run dev
 ```
+
+## Tests
+- Used Jest for the unit testing of the backend
+- Used Cypress for the integration test of recat(frontend) and node (backend)
+
+### Unit Testing
+
+We did the unit testing using Jest in the file 
+
+```bash
+property.controller.test.js
+```
+Install the following dependencies:
+
+```bash
+npm install --save-dev jest supertest
+```
+
+In your packages.json, place the
+
+```bash
+"scripts": {
+  "test": "jest"
+}
+```
+
+To run the Jest tests:
+```bash
+npm test
+```
+
+The following CRUD operations are covered:
+
+- GET all property posts (should return empty initially)
+- POST create a new property post
+- GET property posts after data insertion
+- PUT update an existing property post
+- DELETE a property post
+
+## Integration Testing (Frontend + Backend)
+Used Cypress to test the end-to-end user flow for signing in from the React frontend.
+
+
+Install Cypress as a dev dependency:
+```bash
+npm install cypress --save-dev
+```
+
+Then add the following script to your package.json:
+```bash
+"scripts": {
+  "cypress": "cypress open"
+}
+```
+
+We did the Cypress testing in the file 
+
+```bash
+userSignIn.cy.js
+```
+
+which is in frontend/cypress/e2e/ folder
+
+Make sure both the frontend (npm run dev) and backend (npm start) are running.
+
+Then run Cypress using:
+
+```bash
+npm run cypress
+```
+
+## What We Tested
+
+We tested the user sign-in flow to verify that login inputs work and it send the request to backend.
+
+
 
 
 ## References & Resources
