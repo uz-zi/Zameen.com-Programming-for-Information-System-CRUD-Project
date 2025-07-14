@@ -28,10 +28,14 @@ app.all('/{*any}', (req, res, next) => {
 db_connection.sync()
   .then(() => {
     console.log("Database synced.");
+    if (process.env.NODE_ENV !== 'test') {
     app.listen(port, hostname, () => {
-      console.log(`Running at http://${hostname}:${port}/`);
-    });
+        console.log(`Running at http://${hostname}:${port}/`);
+      });
+  }  
   })
   .catch((err) => {
     console.error("Error syncing database:", err);
   });
+
+module.exports = app;

@@ -79,6 +79,7 @@ const SignInForm = () => {
           <input type="checkbox" className="form-check-input" id="exampleCheck1" />
           <label className="form-check-label" htmlFor="exampleCheck1">Check me out</label>
         </div>
+        {/* type="submit" */}
           <button className="btn btn-primary" onClick={() => handlePostClick()}>
             SignIn
           </button>
